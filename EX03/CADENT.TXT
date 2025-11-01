@@ -1,0 +1,20 @@
+00001 JOEL MILLER                 01
+00002 WILSON                      02
+00003 MASTER CHIEF                03
+00004 ELLIE WILLIAMS              01
+00005 WILLOW                      02
+00006 LARA CROFT                  03
+00007 TOMMY MILLER                01
+00008 WOLFGANG                    02
+00009 KRATOS                      03
+00010 ABBY ANDERSON               01
+00011 WICKERBOTTOM                02
+00012 ALOY                        03
+00013 MARLENE                     01
+00014 WX78                        02
+00015 ARTHUR MORGAN               03
+00016 WES                         02
+00017 WALTER                      02
+00018 WARLY                       02
+00019 WANDA                       02
+00020 WORMWOOD                    02
