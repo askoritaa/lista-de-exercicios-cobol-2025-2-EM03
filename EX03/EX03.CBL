@@ -26,13 +26,13 @@
        01 REG-CADENT.
            02 COD-ENT PIC 9(05).
            02 NOM-ENT PIC X(30).
-           02 DEP-ENT PIC 9(02).
+           02 DEP-ENT PIC 9(01).
 
        SD ARQSOR. 
        01 REG-SOR.
            02 COD-SOR PIC 9(05).
            02 NOM-SOR PIC X(30).
-           02 DEP-SOR PIC 9(02).
+           02 DEP-SOR PIC 9(01).
 
        FD CADSAI
            LABEL RECORD ARE STANDARD 
@@ -47,23 +47,40 @@
 
        PROCEDURE DIVISION.
        EM03-EX03.
-       OPEN INPUT CADENT.
        SORT ARQSOR
-            ASCENDING KEY COD-SOR
-            USING  CADENT
-            OUTPUT PROCEDURE SOR-ROT.
-       CLOSE CADENT.
+           ASCENDING KEY COD-SOR
+           USING CADENT
+           OUTPUT PROCEDURE SOR-ROT.
        STOP RUN.
 
        SOR-ROT SECTION.
-           OPEN OUTPUT CADSAI
-           PERFORM UNTIL FIM-ARQ EQUAL "SIM"
-               RETURN ARQSOR INTO REG-SOR
+           PERFORM INICIO.
+           PERFORM PRINCIPAL
+               UNTIL FIM-ARQ EQUAL "SIM".
+           PERFORM FIM.
+
+       INICIO SECTION.
+           OPEN INPUT CADENT.
+           OPEN OUTPUT CADSAI.
+           PERFORM LE-SORT.
+
+       LE-SORT SECTION.
+           RETURN ARQSOR INTO REG-SOR
                AT END
-                  MOVE "SIM" TO FIM-ARQ
-               NOT AT END 
-                  IF DEP-SOR EQUAL 01 OR 02 THEN
-                     MOVE COD-SOR TO COD-SAI
-                     MOVE NOM-SOR TO NOM-SAI
-                     WRITE REG-CADSAI.
+               MOVE "SIM" TO FIM-ARQ.
+
+       PRINCIPAL SECTION.
+           PERFORM SELECAO.
+           PERFORM LE-SORT.
+
+       SELECAO SECTION.
+           IF DEP-SOR EQUAL 1 OR 2 THEN
+           PERFORM GRAVACAO.
+
+       GRAVACAO SECTION.
+           MOVE COD-SOR TO COD-SAI
+           MOVE NOM-SOR TO NOM-SAI
+           WRITE REG-CADSAI.
+
+       FIM SECTION.
            CLOSE CADSAI.
