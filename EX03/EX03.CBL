@@ -6,12 +6,13 @@
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
-       SPECIAL-NAMES. DECIMAL IS COMMA.
+       SPECIAL-NAMES. DECIMAL-POINT IS COMMA.
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            SELECT CADENT ASSIGN TO DISK
            ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT ARQSOR ASSIGN TO DISK.
            SELECT CADSAI ASSIGN TO DISK
            ORGANIZATION IS LINE SEQUENTIAL.
 
@@ -27,11 +28,42 @@
            02 NOM-ENT PIC X(30).
            02 DEP-ENT PIC 9(02).
 
-       FD CADSAI 
+       SD ARQSOR. 
+       01 REG-SOR.
+           02 COD-SOR PIC 9(05).
+           02 NOM-SOR PIC X(30).
+           02 DEP-SOR PIC 9(02).
+
+       FD CADSAI
            LABEL RECORD ARE STANDARD 
            VALUE OF FILE-ID IS "CADSAI.TXT".
 
-       01 REG CADSAI.
+       01 REG-CADSAI.
            02 COD-SAI PIC 9(05).
            02 NOM-SAI PIC X(30).
+
+       WORKING-STORAGE SECTION.
+       77 FIM-ARQ PIC X(03) VALUE "NAO".
+
        PROCEDURE DIVISION.
+       EM03-EX03.
+       OPEN INPUT CADENT.
+       SORT ARQSOR
+            ASCENDING KEY COD-SOR
+            USING  CADENT
+            OUTPUT PROCEDURE SOR-ROT.
+       CLOSE CADENT.
+       STOP RUN.
+
+       SOR-ROT SECTION.
+           OPEN OUTPUT CADSAI
+           PERFORM UNTIL FIM-ARQ EQUAL "SIM"
+               RETURN ARQSOR INTO REG-SOR
+               AT END
+                  MOVE "SIM" TO FIM-ARQ
+               NOT AT END 
+                  IF DEP-SOR EQUAL 01 OR 02 THEN
+                     MOVE COD-SOR TO COD-SAI
+                     MOVE NOM-SOR TO NOM-SAI
+                     WRITE REG-CADSAI.
+           CLOSE CADSAI.
