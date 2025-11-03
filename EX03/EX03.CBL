@@ -12,6 +12,7 @@
        FILE-CONTROL.
            SELECT CADENT ASSIGN TO DISK
            ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT ARQSOR ASSIGN TO DISK.
            SELECT CADSAI ASSIGN TO DISK
            ORGANIZATION IS LINE SEQUENTIAL.
 
@@ -46,21 +47,23 @@
 
        PROCEDURE DIVISION.
        EM03-EX03.
-       SORT ARQSOR.
-            ASCENDING KEY COD-SOR.
+       OPEN INPUT CADENT.
+       SORT ARQSOR
+            ASCENDING KEY COD-SOR
             USING  CADENT
-            GIVING CADSAI
-            OUTPUT PROCEDURE SOR-ROT
-            STOP RUN.
+            OUTPUT PROCEDURE SOR-ROT.
+       CLOSE CADENT.
+       STOP RUN.
 
        SOR-ROT SECTION.
-           OPEN OUTPUT CADSAI PERFORM UNTIL FIM-ARQ EQUAL "SIM"
-           RETURN ARQSOR INTO REG-SOR
-           AT END
-              MOVE "SIM" TO FIM-ARQ
-           NOT AT END 
-              IF DEP-SOR EQUAL 01 OR 02 THEN
-                 MOVE COD-SOR TO COD-SAI
-                 MOVE NOM-SOR TO NOM-SAI
-                 WRITE REG-CADSAI.
+           OPEN OUTPUT CADSAI
+           PERFORM UNTIL FIM-ARQ EQUAL "SIM"
+               RETURN ARQSOR INTO REG-SOR
+               AT END
+                  MOVE "SIM" TO FIM-ARQ
+               NOT AT END 
+                  IF DEP-SOR EQUAL 01 OR 02 THEN
+                     MOVE COD-SOR TO COD-SAI
+                     MOVE NOM-SOR TO NOM-SAI
+                     WRITE REG-CADSAI.
            CLOSE CADSAI.
